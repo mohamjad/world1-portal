@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { LoginForm } from "@/components/login-form";
+import { isSupabaseConfigured } from "@/lib/env";
 
 export const metadata: Metadata = {
   title: "Login",
@@ -22,7 +23,10 @@ export default async function LoginPage({
         <p className="mt-2 text-sm text-neutral-600">
           Sign in, then an admin approves access if the account is new.
         </p>
-        <LoginForm nextPath={nextPath} />
+        <LoginForm
+          nextPath={nextPath}
+          isConfigured={isSupabaseConfigured()}
+        />
         <p className="mt-5 text-xs text-neutral-500">
           Authorized use only. By continuing you accept the{" "}
           <a href="/terms" className="underline underline-offset-4">

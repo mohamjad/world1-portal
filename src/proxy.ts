@@ -1,6 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
-import { getSupabaseEnv } from "@/lib/env";
+import { getOptionalSupabaseEnv } from "@/lib/env";
 
 const protectedRoutes = [
   "/",
@@ -22,9 +22,18 @@ function isProtected(pathname: string) {
 
 export async function proxy(request: NextRequest) {
   let response = NextResponse.next({ request });
-  const { url, anonKey } = getSupabaseEnv();
+  const env = getOptionalSupabaseEnv();
+  const { pathname } = request.nextUrl;
 
-  const supabase = createServerClient(url, anonKey, {
+  if (!env) {
+    if (isProtected(pathname)) {
+      return NextResponse.redirect(new URL("/setup-error", request.url));
+    }
+
+    return response;
+  }
+
+  const supabase = createServerClient(env.url, env.anonKey, {
     cookies: {
       getAll() {
         return request.cookies.getAll();
@@ -46,8 +55,6 @@ export async function proxy(request: NextRequest) {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-
-  const { pathname } = request.nextUrl;
 
   if (pathname === "/login" && user) {
     return NextResponse.redirect(new URL("/", request.url));

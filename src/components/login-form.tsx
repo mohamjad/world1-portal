@@ -4,7 +4,13 @@ import { Mail } from "lucide-react";
 import { useState, useTransition } from "react";
 import { createClient } from "@/lib/supabase-browser";
 
-export function LoginForm({ nextPath }: { nextPath: string }) {
+export function LoginForm({
+  nextPath,
+  isConfigured,
+}: {
+  nextPath: string;
+  isConfigured: boolean;
+}) {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -12,6 +18,11 @@ export function LoginForm({ nextPath }: { nextPath: string }) {
 
   function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (!isConfigured) {
+      setError("Portal auth is not configured.");
+      return;
+    }
+
     setError(null);
     setMessage(null);
 
@@ -42,6 +53,11 @@ export function LoginForm({ nextPath }: { nextPath: string }) {
       <button
         type="button"
         onClick={() => {
+          if (!isConfigured) {
+            setError("Portal auth is not configured.");
+            return;
+          }
+
           const supabase = createClient();
           const origin = window.location.origin;
           void supabase.auth.signInWithOAuth({
@@ -53,6 +69,7 @@ export function LoginForm({ nextPath }: { nextPath: string }) {
             },
           });
         }}
+        disabled={!isConfigured}
         className="h-11 w-full border border-neutral-300 bg-white px-4 text-sm font-medium hover:border-neutral-950"
       >
         Continue with Google
@@ -70,8 +87,9 @@ export function LoginForm({ nextPath }: { nextPath: string }) {
           <input
             id="email"
             type="email"
-            required
-            value={email}
+          required
+          disabled={!isConfigured}
+          value={email}
             onChange={(event) => setEmail(event.target.value)}
             className="h-11 w-full border border-neutral-300 bg-white px-3 text-base outline-none focus:border-neutral-950"
             autoComplete="email"
@@ -79,7 +97,7 @@ export function LoginForm({ nextPath }: { nextPath: string }) {
         </div>
         <button
           type="submit"
-          disabled={isPending}
+        disabled={isPending}
           className="inline-flex h-11 w-full items-center justify-center gap-2 bg-neutral-950 px-4 text-sm font-medium text-white disabled:cursor-not-allowed disabled:bg-neutral-400"
         >
           <Mail className="h-4 w-4" aria-hidden="true" />
@@ -87,6 +105,11 @@ export function LoginForm({ nextPath }: { nextPath: string }) {
         </button>
       </form>
       {message ? <p className="text-sm text-emerald-700">{message}</p> : null}
+      {!isConfigured ? (
+        <p className="text-sm text-red-700">
+          Missing Supabase environment variables.
+        </p>
+      ) : null}
       {error ? <p className="text-sm text-red-700">{error}</p> : null}
     </div>
   );
