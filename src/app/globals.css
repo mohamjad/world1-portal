@@ -35,6 +35,31 @@
   pointer-events: none;
 }
 
+.portal-login-fish {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  opacity: 1;
+  transform: none;
+  transform-origin: center;
+  filter: none;
+  pointer-events: none;
+}
+
+.portal-login-fish * {
+  pointer-events: none;
+}
+
+/* hide fish source videos from layout */
+.ascii-video-dither__source {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
 .portal-login-gate {
   position: relative;
   z-index: 2;
