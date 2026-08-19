@@ -1,26 +1,203 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --font-pixel: var(--font-geist-pixel-circle);
+  --font-mono: var(--font-ibm-plex-mono);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-ibm-plex-mono);
+  --font-mono: var(--font-ibm-plex-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ── Login page ─────────────────────────────────────────────── */
+
+.portal-login-page {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  align-items: center;
+  min-height: 100svh;
+  height: 100dvh;
+  overflow: hidden;
+  background: #000;
+  color: rgba(246, 250, 255, 0.96);
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+.portal-login-page::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background:
+    linear-gradient(90deg, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.2) 48%, rgba(0, 0, 0, 0.02) 100%),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.34) 0%, rgba(0, 0, 0, 0.01) 52%, rgba(0, 0, 0, 0.24) 100%);
+  pointer-events: none;
+}
+
+.portal-login-gate {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  gap: 1.15rem;
+  width: min(calc(100% - 2.5rem), 22rem);
+  margin-inline: clamp(1.25rem, 8vw, 7rem) auto;
+}
+
+.portal-login-gate h1 {
+  margin: 0;
+  color: rgba(246, 250, 255, 0.94);
+  font-family: var(--font-pixel), var(--font-mono), monospace;
+  font-size: clamp(2rem, 5vw, 3.35rem);
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 0.9;
+  text-transform: lowercase;
+  text-shadow: 0 0 28px rgba(185, 199, 214, 0.16);
+}
+
+.portal-login-gate p {
+  margin: 0;
+  color: rgba(185, 199, 214, 0.5);
+  font-family: var(--font-mono), monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  line-height: 1;
+  text-transform: lowercase;
+}
+
+/* ── Login form ─────────────────────────────────────────────── */
+
+.portal-login-form {
+  display: grid;
+  gap: 0.62rem;
+  width: min(100%, 20rem);
+  margin-top: 0.5rem;
+}
+
+.portal-login-field {
+  display: grid;
+  gap: 0.42rem;
+}
+
+.portal-login-field span {
+  color: rgba(224, 235, 246, 0.86);
+  font-family: var(--font-mono), monospace;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  line-height: 1.45;
+  text-transform: lowercase;
+}
+
+.portal-login-field input {
+  width: 100%;
+  border: 0;
+  border-bottom: 1px solid rgba(224, 235, 246, 0.5);
+  border-radius: 0;
+  background: transparent;
+  padding: 0.42rem 2rem 0.5rem 0;
+  color: rgba(246, 250, 255, 0.94);
+  font-family: var(--font-mono), monospace;
+  font-size: clamp(1rem, 2.5vw, 1.18rem);
+  letter-spacing: 0.04em;
+  outline: none;
+  box-shadow: none;
+  -webkit-text-security: none;
+  text-security: none;
+}
+
+.portal-login-field input:focus-visible {
+  outline: none;
+  border-bottom-color: rgba(246, 250, 255, 0.86);
+}
+
+.portal-login-field input::placeholder {
+  color: rgba(224, 235, 246, 0.28);
+}
+
+.portal-login-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding-top: 0.28rem;
+}
+
+.portal-login-actions button[type="submit"] {
+  border: 1px solid rgba(224, 235, 246, 0.38);
+  border-radius: 0;
+  background: rgba(0, 0, 0, 0.82);
+  color: rgba(246, 250, 255, 0.92);
+  cursor: pointer;
+  font-family: var(--font-mono), monospace;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  padding: 0.88rem 1.1rem;
+  text-transform: lowercase;
+  transition: border-color 140ms ease, color 140ms ease;
+}
+
+.portal-login-actions button[type="submit"]:hover {
+  border-color: rgba(246, 250, 255, 0.56);
+  color: rgba(246, 250, 255, 0.96);
+}
+
+.portal-login-actions button[type="submit"]:disabled {
+  cursor: wait;
+  opacity: 0.48;
+}
+
+.portal-login-error {
+  margin: 0;
+  color: rgba(255, 140, 130, 0.9);
+  font-family: var(--font-mono), monospace;
+  font-size: 0.76rem;
+  letter-spacing: 0.06em;
+  text-transform: lowercase;
+}
+
+.portal-login-legal {
+  margin-top: 2.5rem;
+  color: rgba(185, 199, 214, 0.36);
+  font-family: var(--font-mono), monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  line-height: 1.6;
+  text-transform: lowercase;
+}
+
+.portal-login-legal a {
+  color: rgba(185, 199, 214, 0.56);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color 140ms ease;
+}
+
+.portal-login-legal a:hover {
+  color: rgba(246, 250, 255, 0.72);
+}
+
+/* ── Submitted confirmation ─────────────────────────────────── */
+
+.portal-login-received {
+  margin-top: 1.5rem;
+  display: grid;
+  gap: 0.4rem;
+}
+
+.portal-login-received p {
+  margin: 0;
+  font-family: var(--font-mono), monospace;
+  font-size: 0.82rem;
+  letter-spacing: 0.06em;
+  text-transform: lowercase;
+}
+
+.portal-login-received p:first-child {
+  color: rgba(246, 250, 255, 0.86);
+}
+
+.portal-login-received p:last-child {
+  color: rgba(185, 199, 214, 0.5);
 }
