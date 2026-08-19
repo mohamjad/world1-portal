@@ -23,7 +23,7 @@ export default async function GuideTripsPage() {
       <div className="space-y-6">
         {trips.length > 0 ? (
           trips.map((trip) => {
-            const event = trip.events;
+            const event: any = trip.events;
             // The typing from Supabase join might be nested or an array, depending on if it's 1-to-1 or 1-to-many
             // event_guides -> events is a many-to-1 relation, so events should be a single object.
             // event_participants should be an array.
@@ -83,7 +83,7 @@ export default async function GuideTripsPage() {
                     {participants.length > 0 ? (
                       <ul className="divide-y divide-neutral-100 rounded border border-neutral-200">
                         {participants.map((p: { users?: { name: string | null; email: string; } | null }, i: number) => {
-                          const participantUser = p.users || {};
+                          const participantUser: any = p.users || {};
                           return (
                             <li key={i} className="p-2 text-sm">
                               <div className="font-medium">{participantUser.name || "Unnamed"}</div>
