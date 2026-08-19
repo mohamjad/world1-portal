@@ -1,36 +1,76 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# World1 Portal
 
-## Getting Started
+Private stakeholder portal for World1 clients, members, backers, partners, and guides.
 
-First, run the development server:
+Phase 1 ships the client-side portal:
+
+- Supabase email and Google auth
+- pending account queue
+- admin approval and role grants
+- engagement snapshot
+- invoices across engagements
+- legal agreements across engagements
+- profile and role view
+
+The database is already modeled for member, backer, partner, and guide workflows.
+
+## Local Setup
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Required environment variables:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+NEXT_PUBLIC_SUPABASE_URL=https://wbuoldygtfsersajmzvv.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=...
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+`.env.local` is intentionally ignored by git.
 
-## Learn More
+## Supabase Setup
 
-To learn more about Next.js, take a look at the following resources:
+Run this migration in Supabase before using the app:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```text
+supabase/migrations/202608190001_initial_portal_schema.sql
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The migration bootstraps `mohammed@world1.one` as an admin account. First login with that email creates the user profile, approves it, and grants admin privileges.
 
-## Deploy on Vercel
+Enable Supabase Auth providers:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- Email magic links
+- Google
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Set allowed redirect URLs:
+
+```text
+http://localhost:3000/auth/confirm
+https://portal.world1.dev/auth/confirm
+```
+
+## Production
+
+Deploy as a separate Vercel project and attach `portal.world1.dev`.
+
+Set:
+
+```bash
+NEXT_PUBLIC_SUPABASE_URL=https://wbuoldygtfsersajmzvv.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=...
+NEXT_PUBLIC_SITE_URL=https://portal.world1.dev
+```
+
+Do not add the Supabase service role key to this app. Admin mutations run as the signed-in admin user and are enforced by RLS.
+
+## Verification
+
+```bash
+npm audit --audit-level=moderate
+npm run lint
+npm run build
+```
